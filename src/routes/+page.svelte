@@ -1,27 +1,27 @@
 <script lang="ts">
-	let name: string = 'name';
-	let fileRef: HTMLInputElement;
+	import { invalidateAll } from '$app/navigation';
 
-	async function handleSubmit() {
-		if (name && fileRef.files && fileRef.files[0]) {
-			const file = fileRef.files[0];
+	export let data;
 
-			const formData = new FormData();
-			formData.append('name', 'test');
-			formData.append('file', file);
-
-			const res = await fetch('/api', {
-				method: 'POST',
-				body: formData
+	async function deleteImage(id: number) {
+		if (confirm('Delete image')) {
+			await fetch(`/api/${id}`, {
+				method: 'DELETE'
 			});
-			const data = await res.json();
-			console.log(data);
+			await invalidateAll();
 		}
 	}
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
-	<input type="text" bind:value={name} />
-	<input type="file" bind:this={fileRef} />
-	<button>submit</button>
-</form>
+<h1>Docker Images</h1>
+
+<ul>
+	{#each data.images as i}
+		<li>
+			<p>{i.name}</p>
+			<button on:click={() => deleteImage(i.id)}>delete</button>
+		</li>
+	{/each}
+</ul>
+
+<a href="/new">new</a>

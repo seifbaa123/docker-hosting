@@ -3,6 +3,7 @@ import { json } from "@sveltejs/kit"
 import fs from "fs"
 import decompress from "decompress"
 import { fileTypeFromBuffer } from "file-type"
+import docker from "$lib/server/docker"
 import { isFileExist } from "$lib/utils"
 import { spawnSync } from "child_process";
 
@@ -38,8 +39,7 @@ export async function POST({ request }) {
         return json({ message: "Dockerfile is messing" })
     }
 
-    const child = spawnSync("docker", ["build", "-t", image.id.toString(), dirPath])
-    const stderr = child.stderr.toString()
+    const stderr = docker.build(image.id.toString(), dirPath)
     if (stderr) {
         return json({ message: `docker build Failed:\n${stderr}` })
     }
