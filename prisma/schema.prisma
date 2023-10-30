@@ -11,6 +11,7 @@ datasource db {
 }
 
 model DockerImages {
-    id   Int    @id @default(autoincrement())
-    name String
+    id       Int     @id @default(autoincrement())
+    name     String
+    hasBuild Boolean
 }

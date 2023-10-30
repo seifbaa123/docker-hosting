@@ -4,6 +4,7 @@ import fs from "fs"
 import decompress from "decompress"
 import { fileTypeFromBuffer } from "file-type"
 import { isFileExist } from "$lib/utils"
+import { spawnSync } from "child_process";
 
 export async function GET() {
     const images = await db.dockerImages.findMany()
@@ -21,20 +22,28 @@ export async function POST({ request }) {
         return json({ message: "Invalid file type" })
     }
 
-    const image = await db.dockerImages.create({ data: { name } })
+    const image = await db.dockerImages.create({ data: { name, hasBuild: false } })
 
     const tmpPath = `/tmp/${image.id}`
     const dirPath = `${process.env.DOCKER_IMAGES_DIR}/${image.id}`
+    const dockerFile = `${dirPath}/Dockerfile`
 
     fs.writeFileSync(tmpPath, fileBuffer)
     await decompress(tmpPath, dirPath)
     fs.rmSync(tmpPath)
 
-    if (!isFileExist(`${dirPath}/Dockerfile`)) {
-        fs.rmdirSync(dirPath, { recursive: true })
+    if (!isFileExist(dockerFile)) {
+        fs.rmSync(dirPath, { recursive: true })
         db.dockerImages.delete({ where: { id: image.id } })
         return json({ message: "Dockerfile is messing" })
     }
 
+    const child = spawnSync("docker", ["build", "-t", image.id.toString(), dirPath])
+    const stderr = child.stderr.toString()
+    if (stderr) {
+        return json({ message: `docker build Failed:\n${stderr}` })
+    }
+
+    db.dockerImages.update({ where: { id: image.id }, data: { hasBuild: true } })
     return json({ message: "success" })
 }
