@@ -5,7 +5,6 @@ import decompress from "decompress"
 import { fileTypeFromBuffer } from "file-type"
 import docker from "$lib/server/docker"
 import { isFileExist } from "$lib/utils"
-import { spawnSync } from "child_process";
 
 export async function GET() {
     const images = await db.dockerImages.findMany()
