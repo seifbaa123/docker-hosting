@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 
 	export let data;
 
@@ -13,15 +13,30 @@
 	}
 </script>
 
-<h1>Docker Images</h1>
-<a href="/new">new</a>
-
-<ul>
-	{#each data.images as i}
-		<li>
-			<p>{i.name}</p>
-			<button on:click={() => goto(`/update/${i.id}`)}>update</button>
-			<button on:click={() => deleteImage(i.id)}>delete</button>
-		</li>
-	{/each}
-</ul>
+<h1>Home</h1>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Name</th>
+			<th scope="col">Has build</th>
+			<th scope="col" />
+			<th scope="col" />
+		</tr>
+	</thead>
+	<tbody>
+		{#each data.images as i}
+			<tr>
+				<th scope="row">{i.id}</th>
+				<td class="w-75">{i.name}</td>
+				<td class="w-25">{i.hasBuild ? 'yes' : 'no'}</td>
+				<td><a href="/update/{i.id}" class="btn btn-outline-success btn-sm">update</a></td>
+				<td>
+					<button class="btn btn-outline-danger btn-sm" on:click={() => deleteImage(i.id)}
+						>delete
+					</button>
+				</td>
+			</tr>
+		{/each}
+	</tbody>
+</table>

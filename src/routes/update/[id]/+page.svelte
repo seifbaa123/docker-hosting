@@ -45,12 +45,20 @@
 	}
 </script>
 
-<form on:submit|preventDefault={updateName}>
-	<input type="text" bind:value={name} />
-	<button disabled={disableUpdateName}>submit</button>
+<form class="w-100" on:submit|preventDefault={updateName}>
+	<h3>Update name</h3>
+	<div class="form-floating mb-2">
+		<input type="text" class="form-control" bind:value={name} />
+		<label for="floatingInput">Name</label>
+	</div>
+	<button class="btn btn-primary py-2" disabled={disableUpdateName}>Submit</button>
 </form>
 
-<form on:submit|preventDefault={updateFiles}>
-	<input type="file" bind:this={fileRef} />
-	<button disabled={disableUpdateFiles}>submit</button>
+<form class="w-100 pt-4" on:submit|preventDefault={updateFiles}>
+	<h3>Update files</h3>
+	<div class="form-floating mb-2">
+		<input type="file" class="form-control" bind:this={fileRef} />
+		<label for="floatingPassword">File</label>
+	</div>
+	<button class="btn btn-primary py-2" disabled={disableUpdateFiles}>Submit</button>
 </form>

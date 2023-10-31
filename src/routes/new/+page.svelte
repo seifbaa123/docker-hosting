@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 
-	let name: string = 'name';
+	let name: string = '';
 	let fileRef: HTMLInputElement;
 	let disable = false;
 
@@ -26,8 +26,15 @@
 	}
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
-	<input type="text" bind:value={name} />
-	<input type="file" bind:this={fileRef} />
-	<button disabled={disable}>submit</button>
+<h3>Add new docker image</h3>
+<form class="w-100" on:submit|preventDefault={handleSubmit}>
+	<div class="form-floating mb-2">
+		<input type="text" class="form-control" bind:value={name} />
+		<label for="floatingInput">Name</label>
+	</div>
+	<div class="form-floating mb-2">
+		<input type="file" class="form-control" bind:this={fileRef} />
+		<label for="floatingPassword">File</label>
+	</div>
+	<button class="btn btn-primary py-2" disabled={disable}>Submit</button>
 </form>
