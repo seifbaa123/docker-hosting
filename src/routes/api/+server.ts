@@ -22,7 +22,7 @@ export async function POST({ request }) {
         return json({ message: "Invalid file type" })
     }
 
-    const image = await db.dockerImages.create({ data: { name, hasBuild: false } })
+    const image = await db.dockerImages.create({ data: { name, hasBuild: true } })
 
     const tmpPath = `/tmp/${image.id}`
     const dirPath = `${process.env.DOCKER_IMAGES_DIR}/${image.id}`
@@ -40,9 +40,9 @@ export async function POST({ request }) {
 
     const stderr = docker.build(image.id.toString(), dirPath)
     if (stderr) {
+        db.dockerImages.update({ where: { id: image.id }, data: { name: undefined, hasBuild: false } })
         return json({ message: `docker build Failed:\n${stderr}` })
     }
 
-    db.dockerImages.update({ where: { id: image.id }, data: { hasBuild: true } })
     return json({ message: "success" })
 }
