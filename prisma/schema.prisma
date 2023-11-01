@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -11,7 +8,14 @@ datasource db {
 }
 
 model DockerImages {
-    id       Int     @id @default(autoincrement())
-    name     String
-    hasBuild Boolean
+    id         Int          @id @default(autoincrement())
+    name       String
+    hasBuild   Boolean
+    Containers Containers[]
+}
+
+model Containers {
+    id      Int          @id @default(autoincrement())
+    image   DockerImages @relation(fields: [imageId], references: [id])
+    imageId Int
 }

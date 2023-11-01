@@ -14,7 +14,7 @@
 			formData.append('name', name);
 			formData.append('file', file);
 
-			const res = await fetch('/api', {
+			const res = await fetch('/api/images', {
 				method: 'POST',
 				body: formData
 			});

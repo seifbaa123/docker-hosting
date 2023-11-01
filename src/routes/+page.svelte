@@ -3,14 +3,23 @@
 
 	export let data;
 
+	async function runContainer(id: number) {
+		const res = await fetch(`/api/containers`, {
+			method: 'POST',
+			headers: { 'Content-type': 'application/json' },
+			body: JSON.stringify({ imageId: id })
+		});
+		console.log(await res.json());
+	}
+
 	async function rebuildImage(id: number) {
-		await fetch(`/api/${id}/rebuild`);
+		await fetch(`/api/images/${id}/rebuild`);
 		await invalidateAll();
 	}
 
 	async function deleteImage(id: number) {
 		if (confirm('Delete image')) {
-			await fetch(`/api/${id}`, {
+			await fetch(`/api/images/${id}`, {
 				method: 'DELETE'
 			});
 			await invalidateAll();
@@ -36,6 +45,11 @@
 				<th scope="row">{i.id}</th>
 				<td class="w-75">{i.name}</td>
 				<td class="w-25">{i.hasBuild ? 'yes' : 'no'}</td>
+				<td>
+					<button class="btn btn-outline-primary btn-sm" on:click={() => runContainer(i.id)}
+						>run
+					</button>
+				</td>
 				<td>
 					<button class="btn btn-outline-primary btn-sm" on:click={() => rebuildImage(i.id)}
 						>rebuild

@@ -16,7 +16,7 @@
 			const formData = new FormData();
 			formData.append('name', name);
 
-			const res = await fetch(`/api/${data.image.id}`, {
+			const res = await fetch(`/api/images/${data.image.id}`, {
 				method: 'PUT',
 				body: formData
 			});
@@ -34,7 +34,7 @@
 			const formData = new FormData();
 			formData.append('file', file);
 
-			const res = await fetch(`/api/${data.image.id}`, {
+			const res = await fetch(`/api/images/${data.image.id}`, {
 				method: 'PUT',
 				body: formData
 			});
