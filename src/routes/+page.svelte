@@ -3,6 +3,11 @@
 
 	export let data;
 
+	async function rebuildImage(id: number) {
+		await fetch(`/api/${id}/rebuild`);
+		await invalidateAll();
+	}
+
 	async function deleteImage(id: number) {
 		if (confirm('Delete image')) {
 			await fetch(`/api/${id}`, {
@@ -22,6 +27,7 @@
 			<th scope="col">Has build</th>
 			<th scope="col" />
 			<th scope="col" />
+			<th scope="col" />
 		</tr>
 	</thead>
 	<tbody>
@@ -30,6 +36,11 @@
 				<th scope="row">{i.id}</th>
 				<td class="w-75">{i.name}</td>
 				<td class="w-25">{i.hasBuild ? 'yes' : 'no'}</td>
+				<td>
+					<button class="btn btn-outline-primary btn-sm" on:click={() => rebuildImage(i.id)}
+						>rebuild
+					</button>
+				</td>
 				<td><a href="/update/{i.id}" class="btn btn-outline-success btn-sm">update</a></td>
 				<td>
 					<button class="btn btn-outline-danger btn-sm" on:click={() => deleteImage(i.id)}
