@@ -43,9 +43,9 @@ export async function PUT({ params, request }) {
         }
 
         fs.rmSync(dirPathBac, { recursive: true })
-        const stderr = docker.build(params.id, dirPath)
-        if (stderr) {
-            return json({ message: `docker build Failed:\n${stderr}` })
+        const res = docker.build(params.id, dirPath)
+        if (!res.isOK) {
+            return json({ message: `docker build Failed:\n${res.stderr}` })
         }
 
         db.dockerImages.update({ where: { id: Number(params.id) }, data: { hasBuild: true } })
@@ -58,7 +58,11 @@ export async function PUT({ params, request }) {
 export async function DELETE({ params }) {
     const dirPath = `${process.env.DOCKER_IMAGES_DIR}/${params.id}`
     fs.rmSync(dirPath, { recursive: true })
-    docker.rmi(params.id)
+    const res = docker.rmi(params.id)
+    if (!res.isOK) {
+        return json({ message: `docker remove image Failed:\n${res.stderr}` })
+    }
+
     const image = await db.dockerImages.delete({ where: { id: Number(params.id) } })
     return json({ image })
 }

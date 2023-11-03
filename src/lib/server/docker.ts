@@ -1,26 +1,32 @@
-import { spawn, spawnSync, type SpawnSyncReturns } from "child_process"
+import { spawnSync, type SpawnSyncReturns } from "child_process"
 
-function build(imageName: string, dirPath: string): string {
+export type Result = {
+    stdout: string
+    stderr: string
+    isOK: boolean
+}
+
+function build(imageName: string, dirPath: string): Result {
     const child = spawnSync("docker", ["build", "-t", imageName, dirPath])
     return getReturnValue(child)
 }
 
-function rmi(imageName: string): string {
+function rmi(imageName: string): Result {
     const child = spawnSync("docker", ["rmi", imageName, "--force"])
     return getReturnValue(child)
 }
 
-function run(imageName: string): string {
-    spawn("docker", ["run", imageName], { detached: true })
-    return ""
+function run(imageName: string): Result {
+    const child = spawnSync("docker", ["run", "--rm", "-d", imageName])
+    return getReturnValue(child)
 }
 
-function getReturnValue(childProcess: SpawnSyncReturns<Buffer>) {
-    if (childProcess.status != 0) {
-        return childProcess.stderr.toString()
+function getReturnValue(childProcess: SpawnSyncReturns<Buffer>): Result {
+    return {
+        stdout: childProcess.stdout.toString(),
+        stderr: childProcess.stderr.toString(),
+        isOK: childProcess.status === 0
     }
-
-    return ""
 }
 
 export default { build, rmi, run }

@@ -38,10 +38,10 @@ export async function POST({ request }) {
         return json({ message: "Dockerfile is messing" })
     }
 
-    const stderr = docker.build(image.id.toString(), dirPath)
-    if (stderr) {
+    const res = docker.build(image.id.toString(), dirPath)
+    if (!res.isOK) {
         db.dockerImages.update({ where: { id: image.id }, data: { name: undefined, hasBuild: false } })
-        return json({ message: `docker build Failed:\n${stderr}` })
+        return json({ message: `docker build Failed:\n${res.stderr}` })
     }
 
     return json({ message: "success" })

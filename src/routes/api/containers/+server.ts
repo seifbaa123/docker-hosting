@@ -9,12 +9,13 @@ export async function POST({ request }) {
         return json({ message: `docker image not found` })
     }
 
-    await db.containers.create({ data: body })
-
-    const stderr = docker.run(body.imageId)
-    if (stderr) {
-        return json({ message: `docker run Failed:\n${stderr}` })
+    const res = docker.run(body.imageId)
+    if (!res.isOK) {
+        return json({ message: `docker run Failed:\n${res.stderr}` })
     }
+
+    const container = await db.containers.create({ data: { imageId: body.imageId, containerID: res.stdout.trim() } })
+    console.log(container);
 
     return json({ message: "success" })
 }

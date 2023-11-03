@@ -51,7 +51,7 @@
 					</button>
 				</td>
 				<td>
-					<button class="btn btn-outline-primary btn-sm" on:click={() => rebuildImage(i.id)}
+					<button class="btn btn-outline-secondary btn-sm" on:click={() => rebuildImage(i.id)}
 						>rebuild
 					</button>
 				</td>
