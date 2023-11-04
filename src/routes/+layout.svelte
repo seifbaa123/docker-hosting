@@ -6,7 +6,8 @@
 
 	const links: Link[] = [
 		{ href: '/', title: 'Home' },
-		{ href: '/new', title: 'New' }
+		{ href: '/new', title: 'New' },
+		{ href: '/containers', title: 'Containers' }
 	];
 </script>
 
