@@ -26,6 +26,11 @@ function stop(containerID: string): Result {
     return getReturnValue(child)
 }
 
+function isContainerRunning(containerID: string): boolean {
+    const child = spawnSync("docker", ["ps"])
+    return (child.stdout.includes(containerID))
+}
+
 function getReturnValue(childProcess: SpawnSyncReturns<Buffer>): Result {
     return {
         stdout: childProcess.stdout.toString(),
@@ -34,4 +39,4 @@ function getReturnValue(childProcess: SpawnSyncReturns<Buffer>): Result {
     }
 }
 
-export default { build, rmi, run, stop }
+export default { build, rmi, run, stop, isContainerRunning }
