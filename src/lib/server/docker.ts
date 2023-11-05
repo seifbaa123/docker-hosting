@@ -21,6 +21,11 @@ function run(imageName: string): Result {
     return getReturnValue(child)
 }
 
+function stop(containerID: string): Result {
+    const child = spawnSync("docker", ["stop", containerID])
+    return getReturnValue(child)
+}
+
 function getReturnValue(childProcess: SpawnSyncReturns<Buffer>): Result {
     return {
         stdout: childProcess.stdout.toString(),
@@ -29,4 +34,4 @@ function getReturnValue(childProcess: SpawnSyncReturns<Buffer>): Result {
     }
 }
 
-export default { build, rmi, run }
+export default { build, rmi, run, stop }

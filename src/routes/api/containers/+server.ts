@@ -14,8 +14,7 @@ export async function POST({ request }) {
         return json({ message: `docker run Failed:\n${res.stderr}` })
     }
 
-    const container = await db.containers.create({ data: { imageId: body.imageId, containerID: res.stdout.trim() } })
-    console.log(container);
+    await db.containers.create({ data: { imageId: body.imageId, containerID: res.stdout.trim() } })
 
     return json({ message: "success" })
 }
