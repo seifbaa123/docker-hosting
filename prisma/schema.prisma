@@ -17,6 +17,7 @@ model DockerImages {
 model Containers {
     id          Int          @id @default(autoincrement())
     containerID String
+    containerIP String
     image       DockerImages @relation(fields: [imageId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     imageId     Int
 }

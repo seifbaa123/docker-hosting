@@ -21,6 +21,7 @@
 		<tr>
 			<th scope="col">#</th>
 			<th scope="col">ContainerID</th>
+			<th scope="col">ContainerIP</th>
 			<th scope="col" />
 		</tr>
 	</thead>
@@ -29,6 +30,7 @@
 			<tr>
 				<th scope="row">{i.id}</th>
 				<td class="w-100">{i.containerID}</td>
+				<td class="w-100">{i.containerIP}</td>
 				<td>
 					<button class="btn btn-outline-danger btn-sm" on:click={() => remove(i.id)}
 						>delete

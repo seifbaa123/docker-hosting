@@ -6,17 +6,18 @@ async function startup() {
 	const containers = await db.containers.findMany();
 
 	for (const c of containers) {
-		if (docker.isContainerRunning(c.containerID.substring(0, 12))) {
+		if (docker._isContainerRunning(c.containerID.substring(0, 12))) {
 			continue;
 		}
 
 		const res = docker.run(c.imageId.toString());
 		if (res.isOK) {
+			const containerID = res.stdout.trim();
+			const containerIP = docker._getContainerIP(containerID);
 			const r = await db.containers.update({
-				data: { containerID: res.stdout.trim(), imageId: undefined },
+				data: { containerID, containerIP, imageId: undefined },
 				where: { id: c.id }
 			});
-			console.log(r);
 		}
 	}
 }
