@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import { copy } from 'svelte-copy';
 
 	export let data;
 
@@ -30,7 +31,7 @@
 			<tr>
 				<th scope="row">{i.id}</th>
 				<td class="w-100">{i.containerID}</td>
-				<td class="w-100">{i.containerIP}</td>
+				<td class="w-100" style="cursor: pointer" use:copy={i.containerIP}>{i.containerIP}</td>
 				<td>
 					<button class="btn btn-outline-danger btn-sm" on:click={() => remove(i.id)}
 						>delete
