@@ -16,7 +16,9 @@ export async function POST({ request }) {
 
 	const containerID = res.stdout.trim();
 	const containerIP = docker._getContainerIP(containerID);
-	await db.containers.create({ data: { imageId: body.imageId, containerID, containerIP } });
+	const container = await db.containers.create({
+		data: { imageId: body.imageId, containerID, containerIP }
+	});
 
-	return json({ message: 'success' });
+	return json({ message: 'success', container });
 }
