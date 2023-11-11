@@ -7,17 +7,19 @@ import { fileTypeFromBuffer } from 'file-type';
 import fs from 'fs';
 
 export async function PUT({ params, request }) {
+	let isValidRequest = false;
 	const body = await request.formData();
 
 	if (body.get('name')) {
-		const image = await db.dockerImages.update({
+		isValidRequest = true;
+		await db.dockerImages.update({
 			where: { id: Number(params.id) },
 			data: { name: body.get('name') as string, hasBuild: undefined }
 		});
-		return json({ image });
 	}
 
 	if (body.get('file')) {
+		isValidRequest = true;
 		const file = body.get('file') as File;
 
 		const fileBuffer = Buffer.from(await file.arrayBuffer());
@@ -49,6 +51,9 @@ export async function PUT({ params, request }) {
 		}
 
 		db.dockerImages.update({ where: { id: Number(params.id) }, data: { hasBuild: true } });
+	}
+
+	if (isValidRequest) {
 		return json({ message: 'success' });
 	}
 
